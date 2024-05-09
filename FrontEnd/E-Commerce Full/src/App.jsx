@@ -34,6 +34,7 @@ import Footer from "./assets/Components/Footer"
 
 // User components
 import RoutesWithUserChat from "./assets/Components/User/RoutesWithUserChat"
+import ScrollTop from "./utils/ScrollTop"
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
   return (
     <>
     <BrowserRouter>
+    <ScrollTop />
     <Header />
       <Routes>
         <Route element = {<RoutesWithUserChat />}>

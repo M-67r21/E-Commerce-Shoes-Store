@@ -34,7 +34,27 @@ const ProductsList = () => {
           </ListGroup>
           </Col>
           <Col md={9}>
-            {  <ProductForList />  }
+            {Array.from({length:5}).map((_, idx)=>(
+              <ProductForList 
+              key={idx}
+              images={[
+                "/Images/AirMax90.jpg",
+                "/Images/Samba.jpg",
+                "/Images/Puma5.jpg",
+                "/Images/Amiri.jpg",
+                "/Images/Naked Wolf.jpg",
+                "/Images/Lv.jpg",
+                "/Images/Vans.jpg",
+                "/Images/Converse.jpg",
+                "/Images/Clarks.jpg",
+                "/Images/Bape.jpg",
+                "/Images/Dior.jpg",
+                "/Images/Clarks.jpg",    
+                "/Images/Tommy.jpg", ]}
+              idx={idx}
+              />  
+            ))}
+            
             {  <Paginations />  }
           </Col>
           </Row>
