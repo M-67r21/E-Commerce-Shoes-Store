@@ -37,7 +37,7 @@ const Cart = () => {
                   </ListGroupItem>
 
                   <ListGroupItem>
-                    <LinkContainer to="/Users/userorderdetails">
+                    <LinkContainer to="/usercartdetails">
                       <Button type="button">Proceed to Checkout</Button>
                     </LinkContainer>
                   </ListGroupItem>

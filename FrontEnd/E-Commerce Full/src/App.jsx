@@ -12,7 +12,7 @@ import Register from "./assets/Pages/Register"
 // User pages
 import UserProfile from "./assets/Pages/Users/UserProfile"
 import UserOrders from "./assets/Pages/Users/UserOrders"
-import UserCardDetails from "./assets/Pages/Users/UserCardDetails"
+import UserCartDetails from "./assets/Pages/Users/UserCartDetails"
 import UserOrderDetails from "./assets/Pages/Users/UserOrderDetails"
 import ProtectedRoutesComponent from "./assets/Components/ProtectedRoutesComponent"
 
@@ -59,7 +59,7 @@ function App() {
           <Route element = {<ProtectedRoutesComponent admim={false}/>}>
             <Route path="/userprofile" element={<UserProfile />}/>
             <Route path="/userorders" element={<UserOrders />}/>
-            <Route path="/usercarddetails" element={<UserCardDetails />}/>
+            <Route path="/usercartdetails" element={<UserCartDetails />}/>
             <Route path="/userorderdetails" element={<UserOrderDetails />}/>
           </Route> 
        
