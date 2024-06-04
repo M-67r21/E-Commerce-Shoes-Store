@@ -2,23 +2,13 @@ const express = require('express')
 const app = express()
 const port = 3000
 
+app.use(express.json())
+
 const APIRoutes = require("./Routes/APIRoutes")
 
-app.get('/', async (req, res) => {
-    const Product = require("./Models/ProductModel")
-    try {
-        const product = new Product
-        product.name = "New product name"
-        const productSaved = await product.save()
-        console.log(productSaved === product)
-        const products = await Product.find()
-        console.log(products.length)
-        res.send("Product created" + product._id)
-    } catch (er) {
-        next(er) 
-    }
+app.get('/', async (req, res, next) => {
     res.json({message: "API running..."})
-})
+});
 
 //mongodb connection
 const connectDB = require("./Config/db")
