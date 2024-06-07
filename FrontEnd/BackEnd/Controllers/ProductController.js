@@ -1,5 +1,7 @@
 const Product = require("../Models/ProductModel")
 const recordsPerPage = require("../Config/Pagination")
+const imageValidate = require("../Utils/ImageValidate")
+const { error } = require("console")
 
 const getProducts = async(req, res, next) =>{
     try {
@@ -167,7 +169,7 @@ const adminCreateProduct = async (req, res, next) => {
         product.count = count
         product.price = price
         product.category = category
-        if (attributesTable.lenght>0) {
+        if (attributesTable.length>0) {
             attributesTable.map((item) =>{
                 product.attributes.push(item)
             })
@@ -191,7 +193,7 @@ const adminUpdateProduct = async (req, res, next) =>{
         product.count = count || product.count
         product.category = category || product.category
         product.price = price || product.price
-        if (attributesTable.lenght > 0) {
+        if (attributesTable.length > 0) {
             product.attributes = []
             attributesTable.map((item) =>{
                product.attributes.push(item) 
@@ -208,4 +210,80 @@ const adminUpdateProduct = async (req, res, next) =>{
    } 
 }
 
-module.exports = {getProducts, getProductsById, getBestSellers, adminGetProducts, adminDeleteProduct, adminCreateProduct, adminUpdateProduct};
+const adminUpload = async (req, res, next) =>{
+    try {
+        
+        if (!req.files || !! req.files.images ===false) {
+            return res.status(400).send("No files uploaded")
+        }
+
+        const validateResult = imageValidate(req.files.images)
+        if (validateResult.error) {
+            return res.status(400).send(validateResult.error)
+        }
+
+        const path = require("path")
+        const {v4: uuidv4} = require("uuid")
+        const uploadDirectory = path.resolve(__dirname, "../../E-Commerce Full", "public", "Images", "Products")
+
+        let product = await Product.findById(req.query.productId).orFail()
+
+        let imagesTable = []
+        if(Array.isArray(req.files.images)){
+            imagesTable = req.files.images
+        }else{
+            imagesTable.push(req.files.images)
+        }
+
+        for (let image of imagesTable) {
+            var filName = uuidv4() + path.extname(image.name)
+            var uploadPath = uploadDirectory + "/" + filName
+            product.images.push({path: "/Images/Products" + filName})
+            image.mv(uploadPath, function (error) {
+                if (error) {
+                    return res.status(500).send(error)
+                }
+            })
+        }
+        await product.save
+        return res.send("Files uploaded!")
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+const adminDeleteProductImage = async(req, res, next) =>{
+    try {
+        const imagePath = decodeURIComponent(req.params.imagePath)  
+        const path = require("path")
+        const finalPath = path.resolve("../E-Commerce Full/public") + imagePath
+        const fs = require("fs")
+        fs.unlink(finalPath, (error) =>{
+            if (error) {
+                res.status(500).send(error)
+            }
+        })
+        await Product.findOneAndUpdate(
+            {_id: req.params.productId}, 
+            { $pull: {images: {path: imagePath}}}
+            ).orFail()
+        return res.end()
+    
+    } catch (error) {
+        next(error)
+    }
+    
+}
+
+module.exports = {
+    getProducts,
+    getProductsById, 
+    getBestSellers, 
+    adminGetProducts, 
+    adminDeleteProduct, 
+    adminCreateProduct, 
+    adminUpdateProduct, 
+    adminUpload,
+    adminDeleteProductImage
+};
